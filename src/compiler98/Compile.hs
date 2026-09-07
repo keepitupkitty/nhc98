@@ -2,7 +2,7 @@
 
 module Compile(compileOne) where
 
-import IO
+import System.IO
 
 import Util.Extra
 import System.FilePath

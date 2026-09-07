@@ -1,6 +1,6 @@
 module Phase(beginPhase, catchError, catchError2) where
 
-import IO
+import System.IO
 import Error
 import Flags
 

@@ -4,7 +4,7 @@
 module Import (Flags,ImportState,PackedString,TokenId,IdKind,HideDeclIds
               ,readFirst,importOne) where
 
-import IO
+import System.IO
 import SysDeps(PackedString,unpackPS)
 import Flags
 import Util.Extra
@@ -22,6 +22,7 @@ import qualified Data.Map as Map
 import qualified Data.Set as Set
 import Data.Maybe -- (fromJust)
 import Building(Compiler(..),compiler)
+import Control.Exception (catch, SomeException)
 
 
 {-
@@ -48,7 +49,7 @@ openImport flags mrps hiDeps
                       ("Importing module "++mstr++" from "++fstr++".\n")
                else return ()
              return (mstr,fstr,finput))
-          (\ err -> ioError (userError (can'tOpenStr mstr filenames err)))
+          (\ (err :: SomeException) -> ioError (userError (can'tOpenStr mstr filenames err)))
   where
     isUnix = sUnix flags
     preludes = sPreludes flags

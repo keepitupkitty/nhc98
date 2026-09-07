@@ -7,8 +7,9 @@ possible.
 -} 
 module Main where
 
-import IO
-import System
+import System.IO
+import System.Environment
+import Control.Exception (catch)
 
 import Error
 

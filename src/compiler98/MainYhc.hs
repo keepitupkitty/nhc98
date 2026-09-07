@@ -2,7 +2,7 @@ module Main(main) where
 
 import System.Directory
 import System.Environment
-import IO
+import System.IO
 
 import Util.Extra
 import Flags

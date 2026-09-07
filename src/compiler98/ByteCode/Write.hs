@@ -13,7 +13,7 @@ import Flags
 import Util.Extra
 import Util.Text(splitList)
 import IntState
-import IO
+import System.IO
 import System.FilePath
 import System.Directory
 import ForeignCode

@@ -17,7 +17,7 @@ There are two public items
 module Front(front, FrontData(..)) where
 
 import System
-import IO
+import System.IO
 
 import Util.Extra
 import Flags

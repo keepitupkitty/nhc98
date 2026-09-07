@@ -26,7 +26,7 @@ import Type.Data
 import IntState
 import Type.Util
 import Info
-import IO
+import System.IO
 import Error
 import Nice
 
