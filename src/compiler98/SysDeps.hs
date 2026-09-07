@@ -1,10 +1,8 @@
 module SysDeps (
-   module Data.PackedString, trace, openBinaryFileWrite, osName
+   trace, openBinaryFileWrite, osName
 ) where
 
-import Data.PackedString
 import Debug.Trace (trace)
-
 import System.IO
 import System.Info
 

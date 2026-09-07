@@ -23,7 +23,7 @@ module PrettyLib (nil,(<>),text,line,delimiter,fdelimiter,group,nest,groupNest
                  ,Doc
                  ,parens,brackets,braces,string
                  ,pretty,simple) where
-
+import Prelude hiding ((<>))
 
 {- Exported definitions ================================================== -}
 -- Core pretty printer combinators ------------------------------------------
