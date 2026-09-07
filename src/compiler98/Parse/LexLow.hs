@@ -2,7 +2,7 @@ module Parse.LexLow(lexId,isLexId,isNhcId
              ,lexNum,lexInteger
              ) where
 
-import Ratio
+import Data.Ratio
 import Data.Char(isAlpha,isUpper,isLower,isDigit,isAlphaNum)
 
 import Parse.Lex

@@ -5,7 +5,7 @@ Translates all patterns into case expressions
 module Case(caseTopLevel) where
 
 import Data.List(sort)
-import Ratio
+import Data.Ratio
 import Util.Extra
 import Syntax
 import SyntaxPos

@@ -5,9 +5,11 @@ module Util.Extra(module Util.Extra, trace) where
 import Data.Char
 import Data.List
 import Data.Maybe
-import IO (hPutStr,stderr)
 import SysDeps (trace)
-import System
+import System.IO (hPutStr, stderr)
+import System.Environment
+import System.Exit (exitWith, ExitCode(ExitFailure))
+import Control.Exception (catch, SomeException)
 
 
 exitFail :: IO a
@@ -346,7 +348,7 @@ readFirst [x]    = do
 readFirst (x:xs) =
   catch (do finput <- readFile x
             return (x,finput))
-        (\ _ -> readFirst xs)
+        (\ (_ :: SomeException) -> readFirst xs)
 
 ------------------------
 

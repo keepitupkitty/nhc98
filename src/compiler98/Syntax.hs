@@ -4,7 +4,7 @@ import Util.Extra(Pos,strChr,strStr)
 import SysDeps(PackedString)
 import TokenId(TokenId)
 import Id(Id)
-import Ratio
+import Data.Ratio
 import Data.Maybe(isNothing,fromJust)
 import NT
 

@@ -16,7 +16,7 @@ import TokenId
 import Info(isData,isMethod,tidI)
 import FSLib(FSMonad,startfs,fsState,fsTidFun,fsExpAppl,fsClsTypSel,fsExp2,fsId
             ,fsRealData,fsList,ExpList)
-import Ratio
+import Data.Ratio
 import Machine
 import Id(Id)
 import NT(NT(..))

@@ -2,7 +2,7 @@ module Parse.Lex(Lex(..),LexAnnot(..),TokenId) where
 
 import Util.Extra(strStr,strChr)
 import TokenId(TokenId)
-import Ratio
+import Data.Ratio
 
 data LexAnnot = LexArity     TokenId Int
               | LexPrimitive TokenId (String,String)  -- id (opcode,strictness)

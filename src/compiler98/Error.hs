@@ -20,8 +20,10 @@ module Error
 
 import Data.List
 import Data.Char
-import IO
-import System
+import System.IO
+import System.IO.Unsafe
+import System.Exit (exitWith, ExitCode(ExitFailure))
+import Control.Exception (catch, SomeException)
 import Foreign
 import Util.Extra
 
@@ -172,7 +174,7 @@ errorRaw x = unsafePerformIO $ do
 tryReadFile :: String -> FilePath -> IO String
 tryReadFile reason file =
     catch (readFile file)
-          (\ioerror -> errorRaw
+          (\ (ioerror :: SomeException) -> errorRaw
                 ["Error: Can't open" ++ r ++ " file, " ++ file
                 ,"Reason: " ++ show ioerror])
     where
@@ -181,7 +183,7 @@ tryReadFile reason file =
 tryWriteFile :: String -> FilePath -> String -> IO ()
 tryWriteFile reason file contents =
     catch (writeFile file contents)
-          (\ioerror -> errorRaw
+          (\ (ioerror :: SomeException) -> errorRaw
                 ["Error: Can't write" ++ r ++ " file, " ++ file
                 ,"Reason: " ++ show ioerror])
     where
