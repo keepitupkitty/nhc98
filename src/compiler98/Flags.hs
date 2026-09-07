@@ -17,7 +17,7 @@ module Flags
   , calcRootPath
   ) where
 
-import IO
+import System.IO
 import Util.OsOnly(fixRootDir,fixTypeFile,fixObjectFile)
 import Data.Char(isDigit)
 import System.FilePath
@@ -91,8 +91,8 @@ calcRootPath filename modname = joinPath $ take tsize orig
 
 {- Flags are flags that apply to every file -}
 data Flags = FF
-  {sRootFile   :: String	-- full path to root source code
-  ,sFileArgs   :: [String]	-- all filenames given on commandline
+  {sRootFile   :: String        -- full path to root source code
+  ,sFileArgs   :: [String]      -- all filenames given on commandline
   ,sIncludes   :: [String]
   ,sPreludes   :: [String]
   ,sBasePath   :: String
@@ -393,14 +393,14 @@ allOpts =
            (NoArg (\f -> f{sPrelude=True}))
            "Keep prelude definitions in interface file"
   , Option ""  ["lib"]
-           (NoArg (\f -> f{sLib=True}))
-           "Compiling a lib, don't complain if importing modules with \
-          \ names that differ from their filename."
+      (NoArg (\f -> f {sLib = True}))
+      ("Compiling a lib, don't complain if importing modules with" ++
+       " names that differ from their filename.")
   , Option ""  ["part"]
-           (NoArg (\f -> f{sPart=True}))
-                  "Compiling part of a lib, so don't complain if module \
-                  \ name differs from file name and don't create profiling \
-                  \ information for this module"
+      (NoArg (\f -> f {sPart = True}))
+      ("Compiling part of a lib, so don't complain if module" ++
+       " name differs from file name and don't create profiling " ++
+       "information for this module")
   , Option ""  ["unifyhack"]
            (NoArg (\f -> f{sUnifyHack=True}))
            "Enable nasty type hack needed to make the prelude compile"
@@ -477,8 +477,8 @@ allOpts =
            (NoArg (\f -> f{sType=True})) "show syntax tree after type check"
   , Option ""  ["fixsyntax"]
            (NoArg (\f -> f{sFixSyntax=True}))
-           "show syntax tree after removing newtype constructors and fixing \
-           \ Class.Type.method"
+           ("show syntax tree after removing newtype constructors and fixing " ++
+           " Class.Type.method")
   , Option ""  ["lift"]
            (NoArg (\f -> f{sLift=True})) "show syntax tree after lambda lifting"
   , Option ""  ["case"]
