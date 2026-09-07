@@ -1,9 +1,9 @@
 module Package (package, getModule, getOneModule, PackageData) where
 
 import Directory
-import List
-import Char
-import Maybe
+import Data.List
+import Data.Char
+import Data.Maybe
 import Control.Monad
 
 import Flags

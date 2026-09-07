@@ -20,7 +20,7 @@ import IdKind(IdKind)
 import PreImp(HideDeclIds)
 import qualified Data.Map as Map
 import qualified Data.Set as Set
-import Maybe -- (fromJust)
+import Data.Maybe -- (fromJust)
 import Building(Compiler(..),compiler)
 
 

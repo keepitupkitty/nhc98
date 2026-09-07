@@ -4,12 +4,12 @@ Performs lambda-lifting of the program
 
 module Lift (liftCode) where
 
-import List
+import Data.List
 import State
 import PosCode
 import SyntaxPos
 import Util.Extra (emptySet,unionSet,removeSet,noPos,strace,pair)
-import Maybe
+import Data.Maybe
 import Id
 import IntState
 import TokenId

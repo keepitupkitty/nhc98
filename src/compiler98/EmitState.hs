@@ -3,9 +3,9 @@ Mini-interpreter for pretty-printing bytecodes into C array declarations
 -}
 module EmitState where
 
-import Char (isLower)
+import Data.Char (isLower)
 import GcodeLow (foreignfun)
-import List (nub,isPrefixOf)
+import Data.List (nub,isPrefixOf)
 import Tree234
 
 --  , {-type-} EmitState

@@ -14,7 +14,7 @@ import Info
 import Util.MergeSort(group)
 import Reduce(Reduce)
 import Id
-import Maybe
+import Data.Maybe
 import Flags
 
 

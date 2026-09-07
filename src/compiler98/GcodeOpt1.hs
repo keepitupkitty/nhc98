@@ -6,7 +6,7 @@ import AssocTree
 import Util.Extra
 import IntState
 import Prim
-import Maybe
+import Data.Maybe
 
 gcodeOpt1 state gcode = (fixOne state gcode,state)
 

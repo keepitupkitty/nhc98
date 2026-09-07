@@ -9,7 +9,7 @@ import Util.Extra(strace)
 import Type.Data
 import qualified Data.Map as Map
 import Id(Id)
-import Maybe
+import Data.Maybe
 
 
 forceList :: [a] -> b -> b

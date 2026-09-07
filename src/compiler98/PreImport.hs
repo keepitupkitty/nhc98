@@ -3,7 +3,7 @@
 -}
 module PreImport (HideDeclIds,qualRename,preImport) where
 
-import List(nub,intersect,(\\))
+import Data.List(nub,intersect,(\\))
 import TokenId(TokenId(..),tPrelude,tNHCInternal,tYHCDynamic
                 ,t_Arrow,ensureM,forceM,dropM
                 ,rpsPrelude,t_List,isTidCon
@@ -19,7 +19,7 @@ import IExtract
 import Info hiding (TokenId)
 import PreImp(HideDeclIds,HideDeclType,HideDeclData,HideDeclDataPrim
              ,HideDeclClass,HideDeclInstance,HideDeclVarsType)
-import Maybe
+import Data.Maybe
 import Building(Compiler(..),compiler)
 
 

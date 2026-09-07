@@ -2,7 +2,7 @@
 module Core.Reduce(reduce) where
 
 import Core.CoreType
-import List
+import Data.List
 
 reduce (Core x) = Core $ map f x
 

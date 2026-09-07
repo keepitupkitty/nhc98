@@ -6,8 +6,8 @@ import ByteCode.Type
 
 import qualified Data.Map as Map
 import Control.Monad.State
-import List(sortBy)
-import Char(chr)
+import Data.List(sortBy)
+import Data.Char(chr)
 import SysDeps(trace,openBinaryFileWrite)
 import Flags
 import Util.Extra

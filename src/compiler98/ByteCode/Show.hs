@@ -6,7 +6,7 @@ import ByteCode.Type
 import qualified Data.Map as Map
 import Prim
 import Id(Id)
-import Maybe(isJust, fromJust)
+import Data.Maybe(isJust, fromJust)
 import Data.List(intersperse)
 import qualified Data.Set as Set
 

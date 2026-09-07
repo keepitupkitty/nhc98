@@ -14,7 +14,7 @@ import TokenId
 import IntState(IntState,lookupIS,addIS,uniqueIS,tidIS,mrpsIS,strIS,defaultMethodsIS)
 import NT(NewType(..))
 import Id(Id)
-import Maybe
+import Data.Maybe
 
 type ExpList = (Exp Id,Exp Id,Exp Id,Exp Id)  -- expList (nil, cons, TyCon, TyGeneric)
 

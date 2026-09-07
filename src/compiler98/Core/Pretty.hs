@@ -1,9 +1,9 @@
 
 module Core.Pretty(showPretty, dropModule, isOperator) where
 
-import List
-import Maybe
-import Char
+import Data.List
+import Data.Maybe
+import Data.Char
 import Core.CoreType
 
 

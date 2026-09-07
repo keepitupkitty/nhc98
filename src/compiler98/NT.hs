@@ -13,7 +13,7 @@ module NT ( NT(..), NewType(..), Kind(..)
 
 import Id(Id, strTVar)
 import Util.Extra(mixComma,mixSpace,mix)
-import Char
+import Data.Char
 
 infixr 5 :->:
 data Kind = Star | Kind :->: Kind deriving (Eq,Ord)

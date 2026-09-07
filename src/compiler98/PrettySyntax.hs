@@ -22,9 +22,9 @@ import Nice(niceInt,niceNT,mkAL)
 import Info(Info(InfoData),tidI)
 import NT(NewType(NewType))
 import SysDeps (unpackPS)
-import Maybe(isJust,fromJust)
+import Data.Maybe(isJust,fromJust)
 import Flags(Flags,sShowWidth,sShowQualified,sShowIndent)
-import Char
+import Data.Char
 
 
 {-

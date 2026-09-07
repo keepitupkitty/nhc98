@@ -13,7 +13,7 @@ import IdKind
 import Id
 import qualified Data.Map as Map
 import Util.Extra
-import List (delete)
+import Data.List (delete)
 
 --                                       resolved yet?
 --                                                  source alias

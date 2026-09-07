@@ -6,7 +6,7 @@ module Util.OsOnly
   , hierarchical
   ) where
 
-import Char (isUpper)
+import Data.Char (isUpper)
 
 isPrelude str = {-take (7::Int)-} str == "Prelude"
 

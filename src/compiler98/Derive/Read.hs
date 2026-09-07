@@ -12,7 +12,7 @@ import TokenId(tFalse,tTrue,tRead,treadParen,treadsPrec
               ,t_greater,t_append,t_readCon0,t_readCon,t_readConArg
               ,t_readConInfix,t_readField,t_readFinal,isTidOp,dropM)
 import Nice(showsOp,showsVar)
-import Maybe
+import Data.Maybe
 
 deriveRead :: ((TokenId, IdKind) -> Id)
               -> Id -> Id -> [Id] -> [(Id, Id)] -> Pos

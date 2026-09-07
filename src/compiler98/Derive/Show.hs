@@ -1,7 +1,7 @@
 module Derive.Show (deriveShow) where
 
-import List(intersperse,partition)
-import Maybe(isNothing,fromJust)
+import Data.List(intersperse,partition)
+import Data.Maybe(isNothing,fromJust)
 import Syntax(Exp(ExpVar,ExpCon,ExpLit,ExpApplication,PatWildcard),Fun(Fun)
              ,Rhs(Unguarded),Alt(Alt),Decl(DeclFun,DeclInstance,DeclPat)
              ,Decls(DeclsParse),Boxed(Boxed),Lit(LitChar,LitString,LitInt))

@@ -8,7 +8,7 @@ import TokenId(tidPos,tunknown)
 import Util.Extra(unionSet,removeSet,pair)
 import TokenId(visible)
 import SyntaxPos
-import Maybe
+import Data.Maybe
 
 -- isPosAtom x = True -- A (not so) small lie
 

@@ -2,9 +2,9 @@ module Util.Extra(module Util.Extra, trace) where
 
 -- FIXME: Some of this stuff needs moving out into compiler specific bits
 
-import Char
-import List
-import Maybe
+import Data.Char
+import Data.List
+import Data.Maybe
 import IO (hPutStr,stderr)
 import SysDeps (trace)
 import System

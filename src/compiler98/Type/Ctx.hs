@@ -1,6 +1,6 @@
 module Type.Ctx( buildCtx, buildDefaults, ctxsReduce, ctxsSimplify, initCtxs) where
 
-import List(sort)
+import Data.List(sort)
 import NT
 import IntState
 import Info
@@ -11,7 +11,7 @@ import qualified Data.Map as Map
 import Syntax
 import Type.Data
 import State
-import Maybe
+import Data.Maybe
 
 initCtxs :: [TypeDict]
 initCtxs = []

@@ -5,12 +5,12 @@ import TokenId
 import Util.Extra(mixLine,mixSpace,mix)
 import PosCode
 import StrPos
-import List
+import Data.List
 import Data.Char
 import Util.Extra
 import Error
 import IntState
-import Maybe
+import Data.Maybe
 import NT
 import ForeignCode
 import Control.Monad.State

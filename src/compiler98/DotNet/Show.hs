@@ -7,7 +7,7 @@ import Id(Id)
 import TokenId(splitM)
 import Info
 import IntState(IntState,getSymbolTable,getErrorsIS,strIS,arityIS,mrpsIS,lookupIS)
-import Maybe(isJust, fromJust)
+import Data.Maybe(isJust, fromJust)
 import qualified Data.Set as Set
 import Data.Char(toUpper)
 import Data.PackedString(unpackPS)

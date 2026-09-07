@@ -18,8 +18,8 @@ module Error
     )
     where
 
-import List
-import Char
+import Data.List
+import Data.Char
 import IO
 import System
 import Foreign

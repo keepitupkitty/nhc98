@@ -6,7 +6,7 @@ import IntState
 import Info
 import Syntax
 import SyntaxUtil
-import Maybe
+import Data.Maybe
 import Id
 
 optFatBar :: PosExp -> PosExp -> State0 d (IntState, b) (PosExp, (IntState, b))

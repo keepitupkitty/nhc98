@@ -5,7 +5,7 @@ import ByteCode.Type
 import ByteCode.Graph
 import Control.Monad.State
 import qualified Data.Set as Set
-import List(sortBy)
+import Data.List(sortBy)
 import Debug.Trace(trace)
 
 --------------------------------------------------------------------------------------------------------

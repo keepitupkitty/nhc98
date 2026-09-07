@@ -1,6 +1,6 @@
 module Type.Type(typeTopDecls) where
 
-import List(partition)
+import Data.List(partition)
 import TokenId
 import Syntax
 import SyntaxPos
@@ -28,7 +28,7 @@ import Extract(type2NT)
 import qualified Data.Map as Map
 import Remove1_3
 import Id(Id)
-import Maybe
+import Data.Maybe
 
 --import PPSyntax   -- just for debugging
 --import StrSyntax  -- just for debugging

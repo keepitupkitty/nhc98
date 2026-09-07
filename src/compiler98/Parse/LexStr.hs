@@ -1,6 +1,6 @@
 module Parse.LexStr(tab,lexStr,lexChr) where
 
-import Char
+import Data.Char
 
 import Error(errorLC)
 import Parse.LexLow

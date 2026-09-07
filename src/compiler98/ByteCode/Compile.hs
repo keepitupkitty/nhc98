@@ -14,7 +14,7 @@ import Id(Id)
 import qualified Data.Set as Set
 import PosCode
 import StrPos
-import Maybe(fromJust, isNothing, isJust)
+import Data.Maybe(fromJust, isNothing, isJust)
 import ForeignCode(ImpExp(..))
 import TokenId
 import SysDeps(unpackPS)

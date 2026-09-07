@@ -1,6 +1,6 @@
 module Derive.Binary (deriveBinary) where
 
-import List
+import Data.List
 import Syntax
 import MkSyntax(mkInt)
 import IntState

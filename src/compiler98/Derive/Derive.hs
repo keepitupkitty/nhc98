@@ -4,7 +4,7 @@ definitions.
 -}
 module Derive.Derive (derive) where
 
-import List(sort)
+import Data.List(sort)
 import TokenId
 import Util.Extra(pair,snub,mixCommaAnd,strPos,mapSnd)
 import NT
@@ -18,7 +18,7 @@ import State
 import IdKind
 import Type.Data
 import Id(Id)
-import Maybe
+import Data.Maybe
 
 --import DeriveEval             -- Removed in Haskell 98
 import Derive.Eq

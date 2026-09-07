@@ -27,7 +27,7 @@ import Bind(identPat)
 import SyntaxPos(Pos,HasPos(getPos))
 import qualified Data.Map as Map
 import Id(Id)
-import Maybe
+import Data.Maybe
 
 
 {- transform type from syntax tree into internal type -}

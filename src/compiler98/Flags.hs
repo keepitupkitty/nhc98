@@ -19,7 +19,7 @@ module Flags
 
 import IO
 import Util.OsOnly(fixRootDir,fixTypeFile,fixObjectFile)
-import Char(isDigit)
+import Data.Char(isDigit)
 import System.FilePath
 import Util.Text
 import Util.Extra

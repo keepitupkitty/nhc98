@@ -9,8 +9,8 @@ module ForeignCode
   , cTypename
   ) where
 
-import Maybe (fromJust,isNothing)
-import List (isPrefixOf,isSuffixOf,intersperse)
+import Data.Maybe (fromJust,isNothing)
+import Data.List (isPrefixOf,isSuffixOf,intersperse)
 import SysDeps (unpackPS)
 import Syntax
 import Id

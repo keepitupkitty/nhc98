@@ -5,7 +5,7 @@ import SysDeps(PackedString)
 import TokenId(TokenId)
 import Id(Id)
 import Ratio
-import Maybe(isNothing,fromJust)
+import Data.Maybe(isNothing,fromJust)
 import NT
 
 {- ^

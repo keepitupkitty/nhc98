@@ -3,7 +3,7 @@ Builds the contents of the interface file
 -}
 module Export(Flags,PackedString,IntState,buildInterface) where
 
-import List
+import Data.List
 import NT
 import IntState hiding (InfixClass)
 import Scc
@@ -16,7 +16,7 @@ import Syntax(InfixClass(..))
 import Nice
 import IExtract(defFixity)
 import Flags(Flags, sPrelude)
-import Maybe
+import Data.Maybe
 import Building (Compiler(..),compiler)
 
 --import NonStdProfile -- only for debugging the compiler

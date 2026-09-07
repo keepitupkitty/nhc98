@@ -9,7 +9,7 @@ module RmClasses(rmClasses) where
 
 import IntState
 import Syntax
-import Maybe
+import Data.Maybe
 import State
 import Bind(identDecl)
 import TokenId(qualify)

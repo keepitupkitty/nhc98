@@ -1,7 +1,7 @@
 module STGGcode where -- (stgGcode) where
 
 import Util.Extra(pos2Int)
-import Maybe
+import Data.Maybe
 import Id
 import State
 import PosCode

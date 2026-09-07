@@ -1,6 +1,6 @@
 module Parse.LexPre(lexPre,PosTokenPre) where
 
-import Char(isSpace,isDigit,isAlpha,isAlphaNum)
+import Data.Char(isSpace,isDigit,isAlpha,isAlphaNum)
 
 import Parse.Lex
 import Parse.LexLow

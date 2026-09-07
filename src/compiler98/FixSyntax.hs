@@ -7,7 +7,7 @@ Also removes data constructors defined by newtype.
 module FixSyntax(fixSyntax) where
 
 import qualified Data.Map as Map
-import Maybe
+import Data.Maybe
 import Syntax
 import IdKind(IdKind(..))
 import State

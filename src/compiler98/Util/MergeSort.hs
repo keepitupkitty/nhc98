@@ -3,7 +3,7 @@
 -}
 module Util.MergeSort(group,unique) where
 
-import List(sort)
+import Data.List(sort)
 
 -- | Group a list of elements, reorders them as well
 group :: Ord a => [a] -> [[a]]

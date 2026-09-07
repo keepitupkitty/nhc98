@@ -18,9 +18,9 @@ import SyntaxPos
 import Type.Data(TypeMonad)
 import IdKind
 import Util.Extra(strPos,mixCommaAnd,noPos,dropRight,isRight)
-import List
+import Data.List
 import Id(Id)
-import Maybe
+import Data.Maybe
 
 
 {- ---------------------------------------------------------------------------

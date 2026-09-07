@@ -5,14 +5,14 @@ module RenameLib(module RenameLib
         ,ImportState,NT,NewType,IE,Either,Info
         ,Maybe,Flags) where
 
-import List
+import Data.List
 import TokenId(TokenId(..),t_Tuple,ensureM,mkQual2,visible,mkQual3,mkQualD
               ,rpsPrelude,forceM)
 import Syntax hiding (TokenId)
 import Scc
 import NT
 import Util.Extra
-import Maybe
+import Data.Maybe
 
 import qualified Data.Map as Map
 import ImportState hiding (TokenId)

@@ -3,7 +3,7 @@ module STGState where
 import IntState
 import Gcode
 import ForeignCode
-import Maybe
+import Data.Maybe
 import Flags (Flags(sWarnFFI))
 import Util.Extra (Warning(..))
 

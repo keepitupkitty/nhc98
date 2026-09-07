@@ -9,7 +9,7 @@ Also provides:
 -}
 module Rename(ctxs2NT, fixInstance, rename) where
 
-import List
+import Data.List
 import Syntax
 import Bind(bindPat,bindDecls,identPat)
 import RenameLib(ImportState,RenameState,RenameMonad
@@ -36,7 +36,7 @@ import Id(Id)
 
 import Overlap(Overlap)
 import Flags(Flags)
-import Maybe
+import Data.Maybe
 import Error
 
 

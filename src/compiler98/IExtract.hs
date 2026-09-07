@@ -11,7 +11,7 @@ module IExtract
   , getNeedIS,putModidIS
   ) where
 
-import List
+import Data.List
 import TokenId(TokenId(..),t_Arrow,ensureM,dropM,forceM,rpsPrelude
 		,tEq,tOrd,tBounded,tRead,tShow,visible,tUnknown,tunknown)
 import State
@@ -24,7 +24,7 @@ import NT
 import Syntax hiding (TokenId)
 import ImportState hiding (TokenId)
 import Id
-import Maybe
+import Data.Maybe
 import Error
 
 --import PrettyLib      -- debugging output only

@@ -7,7 +7,7 @@ those, they are *far* to numerous to document here.
 -}
 module TokenId(module TokenId) where
 
-import Char(isUpper)
+import Data.Char(isUpper)
 import Util.Extra(Pos,strPos)
 import SysDeps(PackedString, unpackPS, packString, trace)
 import Building (Compiler(..),compiler)

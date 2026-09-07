@@ -12,7 +12,7 @@ import SysDeps(PackedString,trace)
 import qualified Data.Map as Map
 import Syntax(InfixClass(..))
 import Id(Id)
-import Maybe
+import Data.Maybe
 
 data IE = IEnone | IEsel | IEsome | IEabs | IEall deriving (Eq,Show) 
 -- ^ This is "Interface Exports"

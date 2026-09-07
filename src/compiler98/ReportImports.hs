@@ -1,7 +1,7 @@
 module ReportImports where
 
 import qualified Data.Map as Map
-import List(nub,groupBy,intersperse,sortBy)
+import Data.List(nub,groupBy,intersperse,sortBy)
 import SysDeps(unpackPS)
 import TokenId (extractM,extractV)
 import IntState

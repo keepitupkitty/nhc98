@@ -4,7 +4,7 @@ import Id
 import State
 import PosCode
 import Util.Extra(singletonSet,emptySet,unionSet,removeSet,noPos,pair)
-import Maybe
+import Data.Maybe
 import IntState
 --------- ===========
 

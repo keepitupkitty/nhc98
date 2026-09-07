@@ -11,7 +11,7 @@ import Util.Extra
 import GcodeLow(cap0,caf,fun,string,profstatic,profproducer,profconstructor,profmodule,tprofmodule,tprofmodulesub,consttable,lowInteger,extra,wsize,align)
 import GcodeSpec(fixProfstatic,compilerProfstatic)
 import Flags
-import Maybe
+import Data.Maybe
 
 data Down = Down 
 

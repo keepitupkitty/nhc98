@@ -4,7 +4,7 @@ Translates all patterns into case expressions
 
 module Case(caseTopLevel) where
 
-import List(sort)
+import Data.List(sort)
 import Ratio
 import Util.Extra
 import Syntax
@@ -24,7 +24,7 @@ import FSLib
 import SyntaxUtil
 import ForeignCode(ImpExp(..))
 import Id(Id)
-import Maybe
+import Data.Maybe
 
 
 caseTopLevel :: String

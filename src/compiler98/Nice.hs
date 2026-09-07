@@ -12,7 +12,7 @@ import Util.Extra(mixComma,mixSpace,assocDef)
 import SysDeps(PackedString)
 import TokenId
 import Id(Id)
-import Maybe
+import Data.Maybe
 
 niceNT :: Maybe PackedString  -- module qualifier
         -> IntState           -- symboltable needed for names of ids

@@ -4,7 +4,7 @@ module ByteCode.Relative (bcRelative) where
 
 import ByteCode.Type
 import qualified Data.Map as Map
-import Maybe(fromJust)
+import Data.Maybe(fromJust)
 import Util.Extra
 
 ---------------------------------------------------------------------------------------------------

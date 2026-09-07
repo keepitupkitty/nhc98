@@ -1,6 +1,6 @@
 module Derive.XML (deriveXML) where
 
-import List
+import Data.List
 import Syntax
 import MkSyntax(mkInt)
 import IntState

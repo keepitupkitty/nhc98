@@ -1,6 +1,6 @@
 module Scc (sccDepend,Depend(..),isRec) where
 
-import List
+import Data.List
 import qualified Data.Set as Set
 import qualified Data.Map as Map
 

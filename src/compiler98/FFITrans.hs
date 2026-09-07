@@ -25,7 +25,7 @@ import Type.Subst(substNT)
 import Util.Extra     (snub)
 import IExtract  (freeType)
 import SysDeps  (packString,unpackPS)
-import Maybe
+import Data.Maybe
 
 type FFIMonad a = State In Out a Out
 type In  = ((TokenId,IdKind) -> Id)      -- lookup fn

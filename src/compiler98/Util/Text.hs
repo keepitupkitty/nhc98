@@ -4,9 +4,9 @@
 
 module Util.Text where
 
-import Maybe
-import Char
-import List
+import Data.Maybe
+import Data.Char
+import Data.List
 
 
 trim, trimLeft, trimRight :: String -> String

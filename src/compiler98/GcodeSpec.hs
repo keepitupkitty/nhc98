@@ -3,7 +3,7 @@ module GcodeSpec(gcodeZCon,fixProfstatic,compilerProfstatic) where
 import IntState 
 import Gcode
 import GcodeLow(con0,profstatic,profconstructor,profproducer,profmodule)
-import Maybe
+import Data.Maybe
 
 gcodeZCon prof state [] = []
 gcodeZCon prof state (d:ccs) =
