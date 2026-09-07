@@ -4,12 +4,12 @@ It does lots of head-standing to try to ensure
 that things happen in the right order (due to lazy evaluation), that
 error messages get reported correctly, and to be as space-efficient as
 possible.
--} 
+-}
 module Main where
 
 import System.IO
 import System.Environment
-import Control.Exception (catch)
+import Control.Exception (IOException, catch)
 
 import Error
 
@@ -91,6 +91,12 @@ import ReportImports(reportFnImports)
 --beginPhase str = profile str (return ())
 beginPhase str = return ()
 
+-- Catch only I/O exceptions.  Modern GHC cannot infer the exception
+-- type for the old polymorphic catch calls used throughout nhc98.
+catchIO :: IO a -> (IOException -> IO a) -> IO a
+catchIO = catch
+
+
 -- some miscellaneous settings
 primFlags = (False   -- bool is not the same as Word
 	    ,False   -- && || not is not primitive
@@ -122,13 +128,13 @@ main' args = do
   {- lex source code -}
   beginPhase "lex"
   mainChar	-- :: String
-           <- catch (readFile filename) (can'tOpen filename) 
+           <- catchIO (readFile filename) (can'tOpen filename)
   lexdata	-- :: [PosToken]
            <- return (lexical (sUnderscore flags) (sSourceFile fileflags)
-                              (if sUnlit flags 
-                                then unlit (sSourceFile fileflags) mainChar 
+                              (if sUnlit flags
+                                then unlit (sSourceFile fileflags) mainChar
                                 else mainChar))
-  pF (sLex flags) "Lexical" 
+  pF (sLex flags) "Lexical"
        (mixSpace (map (\ (p,l,_,_) -> strPos p ++ ':':show l) lexdata))
 
 
@@ -138,15 +144,15 @@ main' args = do
             <- catchError (parseit parseProg lexdata)
                           ("In file: "++sSourceFile fileflags)
                           (showErr filename)
-  pF (sParse flags) "Parse" (prettyPrintTokenId flags ppModule parsedPrg) 
+  pF (sParse flags) "Parse" (prettyPrintTokenId flags ppModule parsedPrg)
 
 
   -- (Module _ (Visible modid) _ _ _ _) <- return parsedPrg
   -- Insert check that sPart flags or modid == sourcefile ???
 
 
-  {- 
-  -- Perform "need" analysis (what imported entities are required?) 
+  {-
+  -- Perform "need" analysis (what imported entities are required?)
   -- Second argument may contain error message or parse tree
   -}
   beginPhase "need"
@@ -163,8 +169,8 @@ main' args = do
 		--      )
 		--    ]
             <- catchError info ("In file: "++sSourceFile fileflags) id
-  pF (sNeed flags) "Need (after reading source module)"  
-            (show (Map.toList need)) 
+  pF (sNeed flags) "Need (after reading source module)"
+            (show (Map.toList need))
 
 
   {- Parse interface files for imported modules.  -}
@@ -182,10 +188,10 @@ main' args = do
   beginPhase "rename"
   (decls	-- :: Decls Id  (renamed from decls :: Decls TokenId)
    ,state	-- :: IntState  (internal compiler state)
-   ,tidFun	-- :: ((TokenId,IdKind) -> Id) 
+   ,tidFun	-- :: ((TokenId,IdKind) -> Id)
 		--     (mapping from id token and kind to internal id)
    ,tidFunSafe	--   tidFunSafe does not appear to be used anywhere!
-   ,derived	-- :: [(Id,[(Pos,Id)])] 
+   ,derived	-- :: [(Id,[(Pos,Id)])]
 		--     instances that have to be derived:
 		--     class, position where derived, type constructor
    ,userDefault	-- :: Maybe [Id]  (user defaults for Num classes)
@@ -193,15 +199,15 @@ main' args = do
        <- catchError (rename flags modid qualFun expFun inf decls
                              importState overlap)
                      "Errors when renaming" (mixLine . concatMap showError)
-  pF (sRename flags) "Declarations after rename and fixity:" 
-        (prettyPrintId flags state ppTopDecls decls) 
-  pF (sRBound flags) "Symbol table after rename and fixity:"  
+  pF (sRename flags) "Declarations after rename and fixity:"
+        (prettyPrintId flags state ppTopDecls decls)
+  pF (sRBound flags) "Symbol table after rename and fixity:"
         (mixLine (map show (Map.toList (getSymbolTable state))))
-  catchError (getErrorsIS state) "Errors after renaming" mixLine 
+  catchError (getErrorsIS state) "Errors after renaming" mixLine
 
 
   {- Record dependencies in .dep file -}
-  depend flags fileflags state rt 
+  depend flags fileflags state rt
 
 
   {-
@@ -220,10 +226,10 @@ main' args = do
    ,decls)	-- :: Decls Id
            <- catchError (derive tidFun state derived decls)
                          "Deriving failed" mixLine
-  pF (sDerive flags) "Declarations after deriving:" 
-          (prettyPrintId flags state ppTopDecls decls) 
-  pF (sDBound flags) "Symbol table after deriving:"  
-         (mixLine (map show (Map.toList (getSymbolTable state)))) 
+  pF (sDerive flags) "Declarations after deriving:"
+          (prettyPrintId flags state ppTopDecls decls)
+  pF (sDBound flags) "Symbol table after deriving:"
+         (mixLine (map show (Map.toList (getSymbolTable state))))
 
 
   {-
@@ -236,29 +242,27 @@ main' args = do
   beginPhase "extract"
   state	-- :: IntState
            <- return (extract decls state)
-  pF (sEBound flags) "Symbol table after extract:"  
-           (mixLine (map show (Map.toList (getSymbolTable state)))) 
+  pF (sEBound flags) "Symbol table after extract:"
+           (mixLine (map show (Map.toList (getSymbolTable state))))
   catchError (getErrorsIS state) "Errors after extract phase" mixLine
 
 
-  {-
-  -- Create selectors for record fields.
-  -- (replace DeclConstrs by definitions for the selectors)
-  -} 
+  {- Create selectors for record fields.
+     (replace DeclConstrs by definitions for the selectors) -}
   beginPhase "remove fields"
   (decls	-- :: Decls Id
    ,zcon	-- :: [Int]
    ,state)	-- :: IntState
           <- return (removeDecls decls tidFun state)
-  pF (sRemove flags) "Declarations after remove fields:" 
-         (prettyPrintId flags state ppTopDecls decls) 
+  pF (sRemove flags) "Declarations after remove fields:"
+         (prettyPrintId flags state ppTopDecls decls)
   catchError (getErrorsIS state) "Errors after removing fields" mixLine
 
 
-  {- 
-  -- First replace class and instance declarations by their type and method 
-  -- declarations; also fix arity of method definitions.
-  -- Strongly Connected Component analysis 
+  {-
+  -- First replace class and instance declarations by their type and instance
+  -- method declarations; also fix arity of method definitions.
+  -- Strongly Connected Component analysis
   -}
   beginPhase "scc"
   (code		-- :: [ClassCode (Exp Id) Id]
@@ -267,13 +271,13 @@ main' args = do
         <- return (rmClasses tidFun state decls)
   decls		-- :: Decls Id
         <- return (sccTopDecls decls)
-  pF (sScc flags) "Declarations after scc:" 
+  pF (sScc flags) "Declarations after scc:"
     (prettyPrintId flags state ppTopDecls decls)
-  pF (sScc flags) "Class/instances after scc:" 
+  pF (sScc flags) "Class/instances after scc:"
     (prettyPrintId flags state ppClassCodes code)
 
 
-  {- 
+  {-
   -- Type inference.
   -- Also remove do notation and record expressions.
   -}
@@ -282,30 +286,30 @@ main' args = do
    ,decls	-- :: Decls Id
    ,state)	-- :: IntState
           <- return (typeTopDecls tidFun userDefault state code decls)
-  pF (sType flags) "Declarations after type deriving:" 
-         (prettyPrintId flags state ppTopDecls decls) 
-  pF (sTBound flags) "Symbol table after type deriving:"  
-         (mixLine (map show (Map.toList (getSymbolTable state)))) 
+  pF (sType flags) "Declarations after type deriving:"
+         (prettyPrintId flags state ppTopDecls decls)
+  pF (sTBound flags) "Symbol table after type deriving:"
+          (mixLine (map show (Map.toList (getSymbolTable state))))
   catchError (getErrorsIS state) "Errors after type inference/checking" mixLine
 
 
   {- Build interface file for this module and write it out -}
   beginPhase "interface"
   let modname = reverse (unpackPS modid)
-  pF (sRImport flags) ("Actual imports used by this module ("++modname++"):") 
-         (mixLine (reportFnImports modname state)) 
-  state <- if modname == "Main" 
-                 then typeOfMain flags tidFun decls state 
+  pF (sRImport flags) ("Actual imports used by this module ("++modname++"):")
+         (mixLine (reportFnImports modname state))
+  state <- if modname == "Main"
+                 then typeOfMain flags tidFun decls state
                  else return state
-  catch (writeFile (sTypeFile fileflags) (buildInterface flags modid state))
+  catchIO (writeFile (sTypeFile fileflags) (buildInterface flags modid state))
         (\ioerror -> do
                        hPutStr stderr ("Couldn't write interface file "
-                                       ++ sTypeFile fileflags ++ ":" 
-                                       ++ show ioerror ++ "\n") 
+                                       ++ sTypeFile fileflags ++ ":"
+                                       ++ show ioerror ++ "\n")
                        exit)
 
-  {- 
-  -- Fix syntax (small tweaks based on type information) 
+  {-
+  -- Fix syntax (small tweaks based on type information)
   -- optimisation: evaluation of `fromInteger' where possible
   -- Also removes data constructors defined by newtype.
   -}
@@ -316,7 +320,7 @@ main' args = do
         <- return (fixSyntax decls state tidFun)
   pF (sFixSyntax flags) "Declarations after fixSyntax"
           (prettyPrintId flags state ppTopDecls (DeclsParse decls))
-  pF (sFSBound flags) "Symbol table after fixSyntax:"  
+  pF (sFSBound flags) "Symbol table after fixSyntax:"
           (mixLine (map show (Map.toList (getSymbolTable state))))
 
 
@@ -333,11 +337,11 @@ main' args = do
                                    t2i code decls state tidFun)
   case getErrorsIS state of
     Left errors ->
-      pF True "Warning pattern removal" (mixLine errors) 
+      pF True "Warning pattern removal" (mixLine errors)
     _ -> return ()
-  pF (sCase flags) "Declarations after case:"  
-          (strPCode' (strISInt state) decls) 
-  pF (sCBound flags) "Symbol table after case:"  
+  pF (sCase flags) "Declarations after case:"
+          (strPCode' (strISInt state) decls)
+  pF (sCBound flags) "Symbol table after case:"
           (mixLine (map show (Map.toList (getSymbolTable state))))
 
 
@@ -346,10 +350,10 @@ main' args = do
   (decls	-- :: [(Id,PosLambda)]
    ,state)	-- :: IntState
           <- return (primCode primFlags True tidFun state decls)
-  pF (sPrim flags) "Declarations after prim expand:" 
-          (strPCode' (strISInt state) decls) 
-  pF (sPBound flags) "Symbol table after prim expand:"  
-          (mixLine (map show (Map.toList (getSymbolTable state)))) 
+  pF (sPrim flags) "Declarations after prim expand:"
+          (strPCode' (strISInt state) decls)
+  pF (sPBound flags) "Symbol table after prim expand:"
+          (mixLine (map show (Map.toList (getSymbolTable state))))
 
 
   {- Determine free variables (for lambda lifting) -}
@@ -357,7 +361,7 @@ main' args = do
   (decls	-- :: [(Id,PosLambda)]
    ,state)	-- :: IntState
           <- return (freeVar (sKeepCase flags) decls state)
-  pF (sFree flags) "Declarations with explicit free variables:" 
+  pF (sFree flags) "Declarations with explicit free variables:"
      (strPCode' (strISInt state) decls)
 
 
@@ -365,8 +369,8 @@ main' args = do
   (decls	-- :: [(Id,PosLambda)]
    ,state)	-- :: IntState
           <- return (stgArity state decls)
-  pF (sArity flags) "Declarations after first arity grouping" 
-     (strPCode' (strISInt state) decls) 
+  pF (sArity flags) "Declarations after first arity grouping"
+     (strPCode' (strISInt state) decls)
 
 
   {- Lambda lift, introduces thunks -}
@@ -374,18 +378,18 @@ main' args = do
   (decls	-- :: [(Id,PosLambda)]
    ,state)	-- :: IntState
           <- return (liftCode decls state tidFun)
-  pF (sLift flags) "Declarations after lambda lifting:" 
-     (strPCode' (strISInt state) decls) 
-  pF (sLBound flags) "Symbol table after lambda lifting:"  
-     (mixLine (map show (Map.toList (getSymbolTable state)))) 
+  pF (sLift flags) "Declarations after lambda lifting:"
+     (strPCode' (strISInt state) decls)
+  pF (sLBound flags) "Symbol table after lambda lifting:"
+     (mixLine (map show (Map.toList (getSymbolTable state))))
 
-    
+
   {- Do arity grouping again -}
   (decls	-- :: [(Id,PosLambda)]
    ,state)	-- :: IntState
           <- return (stgArity state decls)
-  pF (sArity flags) "Declarations after second arity grouping" 
-     (strPCode' (strISInt state) decls) 
+  pF (sArity flags) "Declarations after second arity grouping"
+     (strPCode' (strISInt state) decls)
 
 
   {- Pos Atom (not sure what this does!) -}
@@ -394,7 +398,7 @@ main' args = do
    ,state)	-- :: IntState
           <- return (posAtom state decls)
   pF (sAtom flags) "Declarations after atom:" (strPCode' (strISInt state) decls)
-  pF (sABound flags) "Symbol table after atom:"  
+  pF (sABound flags) "Symbol table after atom:"
      (mixLine (map show (Map.toList (getSymbolTable state))))
 
 
@@ -405,18 +409,18 @@ main' args = do
   beginPhase "dump zcon"
   zcons		-- :: [[Gcode]]
         <- return (gcodeZCon (sProfile flags) state zcon)
-  handle <- catch (openFile (sObjectFile fileflags) WriteMode) 
+  handle <- catchIO (openFile (sObjectFile fileflags) WriteMode)
 	          (\ioerror -> do
                                  hPutStr stderr ("Couldn't open object file "
-                                   ++ sObjectFile fileflags ++ ":" 
-                                   ++ show ioerror ++ "\n")  
-                                 exit) 
+                                   ++ sObjectFile fileflags ++ ":"
+                                   ++ show ioerror ++ "\n")
+                                 exit)
   --hSetBuffering handle LineBuffering
   (eslabs	-- :: EmitState
    ,escode)	-- :: EmitState
        <- let eslabs = startEmitState Labels
               escode = startEmitState Code in
-          if (sAnsiC flags) 
+          if (sAnsiC flags)
           then if null zcons then return (eslabs,escode)
                else return (foldr (\a b-> gcodeGather Labels state b a)
                                   (emitWord Labels "42" eslabs) zcons
@@ -424,19 +428,19 @@ main' args = do
                                   (emitWord Code "42" escode) zcons
                            )
           else do
-            catch (hPutStr handle (gcodeHeader 
-                     (foldr ( \ a b -> foldr (gcodeDump state) b a) 
+            catchIO (hPutStr handle (gcodeHeader
+                     (foldr ( \ a b -> foldr (gcodeDump state) b a)
                                              "\n" zcons)))
                   (\ioerror -> do
-                                 hPutStr stderr 
+                                 hPutStr stderr
                                     ("Failed writing to object file "
-                                    ++ sObjectFile fileflags ++ ":" 
-                                    ++ show ioerror ++ "\n")  
-                                 exit) 
+                                    ++ sObjectFile fileflags ++ ":"
+                                    ++ show ioerror ++ "\n")
+                                 exit)
             return (eslabs, escode)
 
 
-  {- Generate Gcode for functions -} 
+  {- Generate Gcode for functions -}
   beginPhase "generate code"
   (state	-- :: IntState
    ,fixState)	-- :: (Tree ((Id,Id),Id), (Tree (String,Id), [(Id,Gcode)]))
@@ -452,37 +456,37 @@ main' args = do
 
   gcode		-- :: [[Gcode]]
         <- return (gcodeFixFinish state fixState)
-  pF (sGcodeRel flags) "G Code (rel)" 
-     (concatMap (strGcodeRel state) (concat gcode)) 
+  pF (sGcodeRel flags) "G Code (rel)"
+     (concatMap (strGcodeRel state) (concat gcode))
 
 
   {- Dump Gcode to object file (as bytecode) -}
   beginPhase "write code"
-  if (sAnsiC flags) 
+  if (sAnsiC flags)
     then do
        let eslabs' = foldr (\a b-> gcodeGather Labels state b a) eslabs gcode
            escode' = foldr (\a b-> gcodeGather Code   state b a) escode gcode
-       catch (do hPutStr handle (gcodeCHeader)
-                 mapM_ (hPutStr handle) (emit Labels eslabs')
-                 mapM_ (hPutStr handle) (emit Code escode'))
-             (\ioerror -> do hPutStr stderr 
+       catchIO (do hPutStr handle (gcodeCHeader)
+                   mapM_ (hPutStr handle) (emit Labels eslabs')
+                   mapM_ (hPutStr handle) (emit Code escode'))
+             (\ioerror -> do hPutStr stderr
                                  ("Failed writing code to object file "
-                                  ++ sObjectFile fileflags ++ ":" 
-                                  ++ show ioerror ++ "\n") 
+                                  ++ sObjectFile fileflags ++ ":"
+                                  ++ show ioerror ++ "\n")
                              exit)
-    else catch (hPutStr handle (foldr (\a b -> foldr (gcodeDump state) b a) 
+    else catchIO (hPutStr handle (foldr (\a b -> foldr (gcodeDump state) b a)
                                       "\n" gcode))
                (\ioerror -> do
-                              hPutStr stderr 
+                              hPutStr stderr
                                 ("Failed appending tables to object file "
-                                 ++ sObjectFile fileflags ++ ":" ++ 
-                                 show ioerror ++ "\n") 
+                                 ++ sObjectFile fileflags ++ ":"
+                                 ++ show ioerror ++ "\n")
                               exit)
-  if null foreigns 
+  if null foreigns
     then return ()
     else do
            let warn = if sWarnFFI flags then FFIWarn else NoWarn
-           hPutStr handle "\n#include <haskell2c.h>\n#include <HsFFI.h>\n" 
+           hPutStr handle "\n#include <haskell2c.h>\n#include <HsFFI.h>\n"
            mapM_ (\f-> hPutStr handle (strForeign warn f "")) foreigns
   hClose handle
 
@@ -501,7 +505,7 @@ type FixState = (AssocTree (Int,Int) Int, (AssocTree String Int, [(Int,Gcode)]))
 --         GcodeMem
 --         GcodeOpt2
 --         GcodeRel
--} 
+-}
 generateCode :: Handle
                 -> Flags
                 -> FileFlags
@@ -524,7 +528,7 @@ generateCode handle flags fileflags foreigns state fixState eslabs escode
    ,newforeigns)-- :: [Foreign]
           <- return (stgGcode (sProfile flags) state
                               ((\ (a,b)->(fromEnum a,b)) decl))
-  pF (sGcode flags) "G Code" (concatMap (strGcode state) gcode) 
+  pF (sGcode flags) "G Code" (concatMap (strGcode state) gcode)
 
   (state	-- :: IntState
    ,fixState	-- :: FixState
@@ -552,17 +556,17 @@ generateCode handle flags fileflags foreigns state fixState eslabs escode
   pF (sGcodeRel flags) "G Code (rel)" (concatMap (strGcodeRel state) gcode)
 
   (eslabs',escode') <-
-           if (sAnsiC flags) 
+           if (sAnsiC flags)
            then return (gcodeGather Labels state eslabs gcode
                        ,gcodeGather Code   state escode gcode)
-           else do 
-                  catch (hPutStr handle (foldr (gcodeDump state) "\n" gcode))
+           else do
+                  catchIO (hPutStr handle (foldr (gcodeDump state) "\n" gcode))
                         (\ioerror -> do
-                                       hPutStr stderr 
+                                       hPutStr stderr
                                          ("Failed appending to object file "
-                                          ++ sObjectFile fileflags ++ ":"  
-                                          ++ show ioerror ++ "\n") 
-                                       exit) 
+                                          ++ sObjectFile fileflags ++ ":"
+                                          ++ show ioerror ++ "\n")
+                                       exit)
                   return (eslabs,escode)
   generateCode handle flags fileflags (foreigns++newforeigns) state fixState
                eslabs' escode' decls
@@ -572,23 +576,23 @@ generateCode handle flags fileflags foreigns state fixState eslabs escode
 --------
 
 {- Parse interface files for imported modules -}
-nhcImport :: Flags 
-          -> ImportState 
+nhcImport :: Flags
+          -> ImportState
           -> [( PackedString
               , (PackedString, PackedString, Set.Set TokenId)
                   -> [[TokenId]] -> Bool
               , HideDeclIds
-              )] 
+              )]
           -> IO ImportState
 
 nhcImport flags importState [] = do
   --beginPhase "import []"
-  pF (sINeed flags) "Need after all imports"    
-             (show (Set.toList (thd3 (getNeedIS importState)))) 
-  pF (sIBound flags) "Symbol table after import"  
-             (mixLine (map show (Map.toList (getSymbolTableIS importState)))) 
-  pF (sIRename flags) "Rename table after import"  
-             (mixLine (map show (Map.toList (getRenameTableIS importState)))) 
+  pF (sINeed flags) "Need after all imports"
+             (show (Set.toList (thd3 (getNeedIS importState))))
+  pF (sIBound flags) "Symbol table after import"
+             (mixLine (map show (Map.toList (getSymbolTableIS importState))))
+  pF (sIRename flags) "Rename table after import"
+             (mixLine (map show (Map.toList (getRenameTableIS importState))))
   catchError (getErrIS importState) "Errors after importing module"
              (mixLine . concatMap showError)
   return importState
@@ -597,15 +601,15 @@ nhcImport flags importState (x:xs) = do
   --trace ("import:" ++ (reverse . show . fst3) x) $
   --beginPhase ("import:" ++ (reverse . show . fst3) x)
   let fname = (reverse . unpackPS . (\(y,_,_)->y)) x
-  importState <- importOne flags importState Map.empty x 
+  importState <- importOne flags importState Map.empty x
   pF (sIINeed flags) ("Intermediate need after import "++fname)
        (show (Set.toList (thd3 (getNeedIS importState))))
   pF (sIIBound flags) ("Intermediate symbol table after import "++fname)
        (mixLine (map show (Map.toList (getSymbolTableIS importState))))
   pF (sIIRename flags) ("Intermediate rename table after import "++fname)
-       (mixLine (map show (Map.toList (getRenameTableIS importState)))) 
+       (mixLine (map show (Map.toList (getRenameTableIS importState))))
   nhcImport flags importState xs
-    
+
 
 ---   Small help functions
 
