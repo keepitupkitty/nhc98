@@ -1,0 +1,9 @@
+Build floating point C source:
+
+cc -c ghc_floats.c -o ghc_floats.o
+
+Then build using GHC:
+ghc -dynamic -XCPP -i. MainNhc98.hs ghc_floats.o -o compiler98
+
+or build using MicroHS:
+mhs -XCPP -i. MainNhc98.hs ghc_floats.o -o compiler98
