@@ -42,7 +42,7 @@ strPBinding' p     o (i,l) = o ++ p i ++ " = " ++ strPLambda p o l ++ "\n"
 
 strPExp :: (Id -> String) -> String -> PosExp -> String
 strPExp p o (PosExpDict e) = "{d}" ++ strPExp p o e
-strPExp p o (PosExpLet rec pos bs e) = o ++ sLet ++ concatMap ((++"\n").strPBinding' p (' ':o)) bs ++ strPExp p o e
+strPExp p o (PosExpLet rec pos bs e) = o ++ sLet ++ concatMap (\b -> strPBinding' p (' ':o) b ++ "\n") bs ++ strPExp p o e
     where
     sLet = if rec then "letrec\n" else "let\n"
 strPExp p o (PosExpCase pos e args) = o ++ "case " ++ strPExp p "" e ++ " of\n" ++ mixLine (map  (strPAlt p (' ':o)) args)
@@ -70,5 +70,4 @@ strPAlt :: (Id -> String) -> String -> PosAlt -> String
 strPAlt p o (PosAltCon pos c args e) = o ++ p c ++ concatMap ((' ':).p.snd) args ++ " ->\n" ++ strPExp p (' ':o) e
 strPAlt p o (PosAltInt pos i int  e) = o ++ on ++ " ->\n" ++ strPExp p (' ':o) e
     where on = if int then show i else show (chr i)
-
 
