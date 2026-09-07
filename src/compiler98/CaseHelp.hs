@@ -56,13 +56,13 @@ data Pattern =
 
 patternTypes :: [(ExpI->Bool ,[(ExpI,Fun Id)] -> [Pattern])]
 patternTypes =
-        [(isVar,(:[]).PatternVar)
-        ,(isCon,(:[]).PatternCon)
-        ,(isExpInt,(:[]).PatternInt True)
-        ,(isExpChar,(:[]).PatternInt False)
-        ,(isNK,(:[]).PatternNK)
+        [(isVar,(:[]) . PatternVar)
+        ,(isCon,(:[]) . PatternCon)
+        ,(isExpInt,(:[]) . PatternInt True)
+        ,(isExpChar,(:[]) . PatternInt False)
+        ,(isNK,(:[]) . PatternNK)
         ,(isExpIrr,map PatternIrr)
-        ,(isIf,(:[]).PatternIf)]
+        ,(isIf,(:[]) . PatternIf)]
 
 splitPattern :: (ExpI,ExpI) -> IntState -> [Fun Id] -> [Pattern]
 splitPattern list state funs =
@@ -97,7 +97,7 @@ simplifyPat list state pat = pat
 sortInt :: [(ExpI,Fun Id)] -> [(Int,[Fun Id])]
 sortInt funs =
   (stableSort
-  .map ( \ (pat,fun) -> (getInt pat,fun))
+  . map ( \ (pat,fun) -> (getInt pat,fun))
   ) funs
  where
   getInt (PatAs _ _ p) = getInt p

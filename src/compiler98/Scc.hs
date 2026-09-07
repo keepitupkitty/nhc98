@@ -58,8 +58,8 @@ isRec (NoRec _) = False
 isRec (Rec _) = True
 
 instance (Show a) => Show (Depend a) where
-  showsPrec d (NoRec x)    = ("NoRec "++).showsPrec d x
-  showsPrec d (Rec  xs)    = ("Rec "++).showsPrec d xs
+  showsPrec d (NoRec x)    = ("NoRec "++) . showsPrec d x
+  showsPrec d (Rec  xs)    = ("Rec "++) . showsPrec d xs
 
 sccDepend :: (Ord a) => [(a, [a])] -> [Depend a]
 sccDepend dep = fix' (map Set.toList (scc (mkin dep) out (map fst dep)))

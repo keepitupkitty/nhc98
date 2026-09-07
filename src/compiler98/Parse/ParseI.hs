@@ -50,7 +50,7 @@ optSemi = () `parseChk` semi
 
 parseNeedList :: Parser [[TokenId]] [(Pos, Lex, LexState, [PosTokenPre])] c
 parseNeedList =
-     many ( ((:[]).snd) `parseAp`  (conid `orelse` varid)
+     many ( ((:[]) . snd) `parseAp`  (conid `orelse` varid)
                `orelse`
             (map snd :: ([(a,b)] -> [b])) `parseChk` lit L_LCURL
                       `apCut` many  (conid `orelse` varid) `chkCut` lit L_RCURL)

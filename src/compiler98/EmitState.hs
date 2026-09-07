@@ -87,7 +87,7 @@ emitWord Code   a (ES n b word labs code) = ES (n+2) 0 empty labs
 
 emitString :: Pass -> String -> EmitState -> EmitState
 emitString pass = foldr (>|>) (emitByte pass ("0"))
-                  . map (emitByte pass.show.fromEnum)
+                  . map (emitByte pass . show . fromEnum)
 
 emitAlign :: Pass -> EmitState -> EmitState
 emitAlign _   es@(ES n 0 word labs code) = es

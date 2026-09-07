@@ -157,15 +157,15 @@ gcodeCDump p state (DATA_CONSTHEADER a b) = emitWord p ("HW(" ++
 						        show b ++ ")")
 gcodeCDump p state (DATA_W  i)      = emitWord p (show i)
 gcodeCDump p state (DATA_S  s)      = foldr (>|>) (emitByte p ("0"))
-                                          (map (emitByte p.show.fromEnum) s)
+                                          (map (emitByte p . show . fromEnum) s)
 #if defined(NATIVE)
 gcodeCDump p state (DATA_F  f)      = {-no need to test if floatIsDouble-}
                                       let bytes = showBytes f [] in
                                       foldr (>|>) id
-                                        (map (emitByte p.show.fromEnum) bytes)
+                                        (map (emitByte p . show . fromEnum) bytes)
 gcodeCDump p state (DATA_D  d)      = let bytes = showBytes d [] in
                                       foldr (>|>) id
-                                        (map (emitByte p.show.fromEnum) bytes)
+                                        (map (emitByte p . show . fromEnum) bytes)
 #elif defined(NHCFLOAT)
 gcodeCDump p state (DATA_F  f)      = {-if floatIsDouble then
                                       let (h,l) = doubleToInts f in

@@ -56,7 +56,7 @@ fixArity decl@(DeclFun pos fun funs@(Fun args gdexps decls:_)) rstr state =
     --OLD: (DeclFun pos fun (map (toMany pos wantArity) funs),state)
     case uniqueISs state [0 .. hasArity] of
       ((_,newfuni):newargsi,state) ->
-        let allArgs = map (ExpVar pos.snd) newargsi
+        let allArgs = map (ExpVar pos . snd) newargsi
         in case splitAt wantArity allArgs of
          (wantArgs,extraArgs) ->
            (DeclFun pos fun 

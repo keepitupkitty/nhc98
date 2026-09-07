@@ -215,7 +215,7 @@ oneDefault (tvar,cis) (pos,trueExp,defaults) state =
                 ,state)
     Nothing -> ([]
                ,addError state ("No default for "
-                                ++ concatMap ((' ':).strIS state . fst) cis
+                                ++ concatMap ((' ':) . strIS state . fst) cis
                                 ++ " at " ++ strPos pos ++ "." 
                                 ++ "(" ++ show tvar ++ "," ++ show cis++")"))
 

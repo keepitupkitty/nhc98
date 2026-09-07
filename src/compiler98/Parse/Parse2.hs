@@ -215,7 +215,7 @@ parseManyFieldType :: Parser [(Maybe [(Pos, TokenId)], Type TokenId)] [PosToken]
 parseManyFieldType =
      lcurl `into` (\ _ -> manySep comma parseManyFieldType' `chk` rcurl)  -- { v1,...,v2::typeN , ...  w1,...,wN::typeN } 
         `orelse`
-     ((:[]).pair Nothing) `parseAp` (parseStrict parseAType)
+     ((:[]) . pair Nothing) `parseAp` (parseStrict parseAType)
 
 parseManyFieldType' :: Parser (Maybe [(Pos, TokenId)], Type TokenId) [PosToken] c
 parseManyFieldType' =

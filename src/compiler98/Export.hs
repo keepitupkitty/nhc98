@@ -191,8 +191,8 @@ strExport :: PackedString -- module name
 
 strExport modidl state (fixs,exps) =
   ( showString ("interface " ++ reverse (unpackPS modidl) ++ " where {\n")
-  . foldr ((.).showsFix modrps) id fixs
-  . foldr ((.).showsHide modrps) id 
+  . foldr ((.) . showsFix modrps) id fixs
+  . foldr ((.) . showsHide modrps) id 
           (optExport False Nothing (map preExport exps))
   ) "}\n"
 
@@ -235,10 +235,10 @@ strExport modidl state (fixs,exps) =
                else showString "interface ") 
             . (showString . reverse . unpackPS . fromJust) rps)
     . showString "\n{-# NEED" 
-    . foldr ((.).showsNeed (fromJust rps)) id infos 
+    . foldr ((.) . showsNeed (fromJust rps)) id infos 
     . showString " #-}\n" 
         -- need does not need to be qualified
-    . foldr ((.).showsInfo (fromJust rps)) id infos                     
+    . foldr ((.) . showsInfo (fromJust rps)) id infos                     
         -- but the definitions must
 
 
@@ -259,7 +259,7 @@ strExport modidl state (fixs,exps) =
   showsNeed mrps (InfoClass  unique tid exp nt ms ds insts) = 
     groupNeed mrps exp tid ms
   showsNeed mrps (InfoVar unique tid exp fix nt annot) = 
-    showChar ' '.showsVar (fixTid mrps tid)
+    showChar ' ' . showsVar (fixTid mrps tid)
   showsNeed mrps (InfoConstr unique tid ie fix nt fields iType)
     | ie==IEsel = showChar ' '. showsVar (fixTid mrps tid) 
                   . foldr ((.) . showsField mrps) id fields
@@ -287,11 +287,11 @@ strExport modidl state (fixs,exps) =
   showsInfo mrps (InfoData unique (TupleId nargs) exp
                            nt@(NewType free exist ctxs nts) dk) =
       let arg = mkAL free
-          al = arg ++ zip (map snd ctxs) (map (('_':).(:[])) ['a'..'z'])
+          al = arg ++ zip (map snd ctxs) (map (('_':) . (:[])) ['a'..'z'])
                                                          -- a-z is too short!
           strNewType = niceCtxs Nothing state al ctxs
                        ++ mixSpace (map (niceNT Nothing state al) nts)
-          strArgs = concatMap ((' ':).snd) arg
+          strArgs = concatMap ((' ':) . snd) arg
           strTuple = if nargs > 0 then take nargs ('(':repeat ',') ++ ")"
                                   else "()"
       in
@@ -332,11 +332,11 @@ strExport modidl state (fixs,exps) =
             . showString ";\n"
   showsInfo mrps (InfoData unique tid exp nt@(NewType free exist ctxs nts) dk) =
       let arg = mkAL free
-          al = arg ++ zip (map snd ctxs) (map (('_':).(:[])) ['a'..'z'])
+          al = arg ++ zip (map snd ctxs) (map (('_':) . (:[])) ['a'..'z'])
                                                         -- a-z is too short!
           strNewType = niceCtxs (Just mrps) state al ctxs
                        ++ mixSpace (map (niceNT (Just mrps) state al) nts)
-          strArgs = concatMap ((' ':).snd) arg
+          strArgs = concatMap ((' ':) . snd) arg
       in
         case dk of
           (DataTypeSynonym unboxed depth) ->
@@ -376,7 +376,7 @@ strExport modidl state (fixs,exps) =
                             ms ds insts) = 
     let al = mkAL free
     in showString "class " . showString (niceCtxs Nothing state al ctxs)
-       . showsVar (fixTid mrps tid) . showString (concatMap ((' ':).snd) al)
+       . showsVar (fixTid mrps tid) . showString (concatMap ((' ':) . snd) al)
        . (if (exp==IEall || exp==IEsome) && not (null ms) then
             showString " where {\n"
             . showString (concatMap (expMethod mrps . lookupIS state) ms)
