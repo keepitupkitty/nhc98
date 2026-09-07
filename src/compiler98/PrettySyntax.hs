@@ -12,6 +12,7 @@ module PrettySyntax
   , ppExp
   ) where
 
+import Prelude hiding ((<>))
 import Util.Extra(noPos)
 import PrettyLib
 import Syntax hiding (noDecls,TokenId)

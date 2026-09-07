@@ -133,6 +133,6 @@ deriveIx tidFun cls typ tvs ctxs pos =
 
 
 
-newArgs :: Num a => Pos -> a -> b -> IntState -> ([Exp Id],IntState)
+newArgs :: (Num a, Eq a) => Pos -> a -> b -> IntState -> ([Exp Id],IntState)
 newArgs pos 0 = unitS []
 newArgs pos n = unitS ((:) . ExpVar pos) =>>> getUnique =>>> newArgs pos (n-1)

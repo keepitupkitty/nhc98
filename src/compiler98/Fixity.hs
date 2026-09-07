@@ -61,7 +61,7 @@ getOp ops exps (e:es) =
    error ("Expected an infix operator at " ++ strPos (getPos e))
  
 
-finish :: Num b1 => [((InfixClass id, b), (Exp id, b1))] -> [Exp id] -> d -> s -> (Exp id, s)
+finish :: (Num b1, Eq b1) => [((InfixClass id, b), (Exp id, b1))] -> [Exp id] -> d -> s -> (Exp id, s)
 finish [] []   = error "finish empty" 
 finish [] [e] = unitS e
 finish [] _   = error "finish multiple expression"
@@ -96,7 +96,7 @@ harder pos (ipop@((inf,pri),(op,_)):ops) kind op' =
       Infix      -> renameError (ErrorRaw $ "Infix operator at " ++ strPos pos ++ " is non-associative.") (Just (ipop,ops))
   else unitS Nothing
 
-rebuild :: Num b => ((InfixClass id, b1), (Exp id, b)) -> [Exp id] -> [Exp id]
+rebuild :: (Num b, Eq b) => ((InfixClass id, b1), (Exp id, b)) -> [Exp id] -> [Exp id]
 rebuild (_,(op,2)) (e1:e2:es) = ExpApplication (getPos op) [op,e2,e1]:es
 rebuild ((InfixPre fun,_) ,(op,_)) (e1:es) =
         ExpApplication (getPos op) [ExpVar (getPos op) fun,e1]:es
